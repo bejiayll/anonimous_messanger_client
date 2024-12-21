@@ -15,7 +15,7 @@ class App:
         self.friend_key_path = "./config/freinds/public.txt"
         self.public_key_path = "./config/public.txt"
         self.private_key_path = "./config/private.txt"
-        self.connection_path = "./config/private.json"
+        self.connection_path = "./config/connect.json"
 
         self.my_private_key = ""
         self.freind_public_key = ""
@@ -39,11 +39,11 @@ class App:
         self.chat_messages = tk.CTkScrollableFrame(self.tab_msg, bg_color="transparent", width=720, height=460)
         self.chat_messages.pack(padx= 10, pady= 10, anchor= "nw")
 
-        self.message_input = tk.CTkEntry(self.tab_msg, width=550)
-        self.message_input.place(x=580, y=560)
+        self.message_input = tk.CTkEntry(self.tab_msg, width=550, height=30)
+        self.message_input.pack(side="left", fill="both")
 
-        self.message_button = tk.CTkButton(self.tab_msg, text="Send", width=40, command=self.send_msg_button)
-        self.message_button.place(x=580, y=560)
+        self.message_button = tk.CTkButton(self.tab_msg, text="Send", width=40, height=30, command=self.send_msg_button)
+        self.message_button.pack(side="right", fill="both")
 
         ## Settings tab
 
@@ -99,8 +99,8 @@ class App:
             message_decode = (str)(message.decode("utf-8"))
             if len(message_decode) > 0:
                 try:
-                    message_decrypt = rsa.decrypt(message_decode, self.my_private_key)
-                    self.show_getted_msg(message_decrypt)
+                    #message_decrypt = rsa.decrypt(message_decode, self.my_private_key)
+                    self.show_getted_msg(message_decode)
                 except rsa.DecryptionError:
                     continue
     
@@ -111,11 +111,11 @@ class App:
         self.message_input.delete("0", tk.END)
 
     def send_message(self, text):
-        try:
-            message = rsa.encrypt(self.freind_public_key)
-            self.client.send(bytes(message))
-        except:
-            self.show_error_msg("An error occurred while sending a message")
+        #try:
+            #message = rsa.encrypt(self.freind_public_key)
+        self.client.send(bytes(text, encoding="utf-8"))
+        #except:
+            #self.show_error_msg("An error occurred while sending a message")
 
     def run(self):
         self.app.mainloop()
